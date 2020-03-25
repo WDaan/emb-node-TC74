@@ -1,0 +1,35 @@
+{
+    "name": "project-embedded",
+    "version": "0.0.0",
+    "private": true,
+    "dependencies": {
+        "cookie-parser": "~1.4.4",
+        "debug": "~2.6.9",
+        "express": "~4.16.1",
+        "hbs": "~4.0.4",
+        "http-errors": "~1.6.3",
+        "morgan": "~1.9.1",
+        "node-sass-middleware": "0.11.0"
+    },
+    "devDependencies": {
+        "eslint": "^6.8.0",
+        "eslint-config-airbnb-base": "^14.1.0",
+        "eslint-config-prettier": "^6.10.1",
+        "eslint-plugin-import": "^2.20.1",
+        "eslint-plugin-prettier": "^3.1.2",
+        "prettier": "^2.0.2",
+        "pretty-quick": "^2.0.1"
+    },
+    "scripts": {
+        "start": "node ./bin/www",
+        "lint": "pretty-quick && eslint --fix ."
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+ssh://git@github.com/wdaan/project-embedded.git"
+    },
+    "bugs": {
+        "url": "https://gitlab.com/wdaan/project-embedded/issues"
+    },
+    "homepage": "https://gitlab.com/wdaan/project-embedded#readme"
+}
