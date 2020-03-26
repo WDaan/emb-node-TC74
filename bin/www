@@ -6,8 +6,8 @@
 
 const debug = require('debug')('project-embedded:server')
 const http = require('http')
+const io = require('socket.io')(http);
 const app = require('../app')
-
 /**
  * Get port from environment and store in Express.
  */
