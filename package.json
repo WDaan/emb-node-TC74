@@ -21,7 +21,7 @@
         "pretty-quick": "^2.0.1"
     },
     "scripts": {
-        "start": "node ./bin/www",
+        "start": "nodemon -e js,hbs,sass ./bin/www",
         "lint": "pretty-quick && eslint --fix ."
     },
     "repository": {
