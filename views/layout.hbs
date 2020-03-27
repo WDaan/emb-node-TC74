@@ -19,6 +19,9 @@
     integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
     crossorigin="anonymous"></script>
   <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
 </head>
 
 <body>
@@ -29,9 +32,95 @@
   <div class="container">
     {{{body}}}
   </div>
-  <script src="/socket.io/socket.io.js"></script>
   <script>
-    const socket = io();
+    let socket = io();
+    socket.on('temperature', (temp) => {
+      console.log('Temperature:', temp)
+      document.getElementById('temperature').innerHTML = temp
+    })
+    socket.on('inputs', (data) => {
+      console.log('Inputs:', data)
+      data.forEach(el => {
+        if (el.value) {
+          $(`#input-${el.index}`)
+            .addClass('bg-success')
+            .removeClass('bg-light')
+            .removeClass('bg-danger')
+        } else {
+          $(`#input-${el.index}`)
+            .addClass('bg-danger')
+            .removeClass('bg-light')
+            .removeClass('bg-success')
+        }
+      })
+    })
+  </script>
+  <div class="container">
+    <canvas id="myChart" width="300" height="100"></canvas>
+  </div>
+  <script>
+    let myChart
+    function renderChart(labels, data) {
+      const ctx = document.getElementById('myChart').getContext('2d');
+      myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Temperature',
+            data: data,
+            backgroundColor: ['#FF3860']
+          }]
+        },
+        options: {
+          scales: {
+            yAxes: [{
+              ticks: {
+                beginAtZero: true
+              }
+            }]
+          }
+        }
+      });
+    }
+    function getData() {
+      axios.get('/temperatures?num=20').then(res => {
+        console.log(res.data)
+        renderChart(
+          res.data.map(x => new Date(x.created_at).toLocaleTimeString()),
+          res.data.map(x => x.temperature)
+        )
+      })
+    }
+    getData()
+
+    function updateChart() {
+      axios.get('/temperatures?num=1').then(res => {
+        console.log(res.data)
+        removeData(res.data.length)
+        addData(res.data)
+      })
+    }
+
+    function addData(data) {
+      for (let i = 0; i < data.length; i++) {
+        myChart.data.labels.push(new Date(data[i].created_at).toLocaleTimeString())
+        myChart.data.datasets[0].data.push(data[i].temperature)
+      }
+      myChart.update(0);
+    }
+
+    function removeData(len) {
+
+      myChart.data.labels.splice(0, len)
+      myChart.data.datasets[0].data.splice(0, len)
+
+      myChart.update(0);
+    }
+
+    let chartInterval = setInterval(() => {
+      updateChart()
+    }, 1000)
   </script>
 </body>
 

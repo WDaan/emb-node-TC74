@@ -1,13 +1,11 @@
-const shell = require('shelljs')
 const db = require('../utils/db')
 
-class Meting {
+class Database {
     constructor() {
-        this.db = db
         console.log('Meting helper created!')
     }
 
-    static async save(temperature) {
+    async save(temperature) {
         let date = new Date()
         date = date.setHours(date.getHours() + 1)
         date = new Date(date)
@@ -16,17 +14,14 @@ class Meting {
             created_at: date
         })
         const result = await db('metings').where('id', id)
+        console.log('Meting saved to database successfully')
         return { meting: result, successfull: true }
     }
 
-    static read() {
-        const {
-            stdout,
-            stderr,
-            code
-        } = shell.exec('sudo i2cget -y 1 0x48 0x0 b', { silent: true })
-        return parseInt(stdout, 16)
+    async getTemperatures(num){
+        const result = await db('metings').orderBy('id', 'desc').limit(num)
+        return result.reverse();
     }
 }
 
-exports.default = new Meting()
+exports.default = new Database()

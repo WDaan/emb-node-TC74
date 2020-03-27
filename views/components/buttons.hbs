@@ -1,8 +1,8 @@
 <div class="container mt-5 mb-3">
     <h2>Buttons</h2>
-    <p>enkele GPIO outputs te bedienen</p>
+    <p>GPIO output bedienen</p>
     <div class="text-center">
-        <button class="btn btn-primary text-white">ON</button>
-        <button class="btn btn-danger text-white">OFF</button>
+        <button onclick="socket.emit('on')" class="btn btn-primary text-white">ON </button>
+        <button onclick="socket.emit('off')" class="btn btn-danger text-white">OFF</button>
     </div>
 </div>

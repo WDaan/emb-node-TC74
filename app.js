@@ -1,17 +1,43 @@
 const createError = require('http-errors')
 const express = require('express')
+const socketIo = require('socket.io')
 const path = require('path')
 const cookieParser = require('cookie-parser')
 const logger = require('morgan')
-const sassMiddleware = require('node-sass-middleware')
 const hbs = require('hbs')
-
-const indexRouter = require('./routes/index')
-const usersRouter = require('./routes/users')
 
 const app = express()
 
+// Socket.io
+const io = socketIo()
+app.io = io
+
+const indexRouter = require('./routes/index')(io)
+const usersRouter = require('./routes/users')
+
+// socket.io events
+io.on('connection', socket => {
+    console.log('A user connected')
+    app.socket = socket
+})
+
+app.temperatureInterval = setInterval(() => {
+    const GPIO = require('./classes/gpio').default
+    const DB = require('./classes/database').default
+    if (app.socket) {
+        console.log('Reading temperature & inputs')
+        app.socket.emit('temperature', GPIO.getTemperature())
+        app.socket.emit('inputs', GPIO.readInputs())
+    } else {
+        console.log('no socket')
+    }
+    DB.save(GPIO.getTemperature())
+}, 1000)
+
 hbs.registerPartials(`${__dirname}/views/components`)
+hbs.registerHelper('stringifyFunc', function (fn) {
+    return new hbs.SafeString(`(${fn.toString().replace(/\"/g, "'")})()`)
+})
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'))
@@ -21,14 +47,7 @@ app.use(logger('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
-app.use(
-    sassMiddleware({
-        src: path.join(__dirname, 'public'),
-        dest: path.join(__dirname, 'public'),
-        indentedSyntax: true, // true = .sass and false = .scss
-        sourceMap: true
-    })
-)
+
 app.use(express.static(path.join(__dirname, 'public')))
 
 app.use('/', indexRouter)

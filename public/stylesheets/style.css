@@ -1,7 +1,7 @@
 body {
-  font: 15px "Roboto", Helvetica, Arial, sans-serif; }
+    font: 15px 'Roboto', Helvetica, Arial, sans-serif;
+}
 
 a {
-  color: #00B7FF; }
-
-/*# sourceMappingURL=style.css.map */
+    color: #00b7ff;
+}

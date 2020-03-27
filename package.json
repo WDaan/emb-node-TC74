@@ -12,7 +12,7 @@
         "knex": "^0.20.11",
         "morgan": "~1.9.1",
         "mysql": "^2.18.1",
-        "node-sass-middleware": "0.11.0",
+        "onoff": "^5.0.1",
         "shelljs": "^0.8.3",
         "socket.io": "^2.3.0"
     },
@@ -26,7 +26,7 @@
         "pretty-quick": "^2.0.1"
     },
     "scripts": {
-        "start": "nodemon -e js,hbs,sass ./bin/www",
+        "start": "nodemon -e js,hbs,css ./bin/www",
         "lint": "pretty-quick && eslint --fix ."
     },
     "repository": {
