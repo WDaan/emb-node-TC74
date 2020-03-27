@@ -29,7 +29,7 @@ class GPIO {
     }
 
     readInputs() {
-        let result = []
+        const result = []
         this.inputs.forEach((el, index) => {
             result.push({ index, value: el.readSync() })
         })

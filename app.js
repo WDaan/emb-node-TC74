@@ -22,20 +22,25 @@ io.on('connection', socket => {
 })
 
 app.temperatureInterval = setInterval(() => {
+    // eslint-disable-next-line global-require
     const GPIO = require('./classes/gpio').default
+    // eslint-disable-next-line global-require
     const DB = require('./classes/database').default
+
+    const temp = GPIO.getTemperature()
+
     if (app.socket) {
         console.log('Reading temperature & inputs')
-        app.socket.emit('temperature', GPIO.getTemperature())
+        app.socket.emit('temperature', temp)
         app.socket.emit('inputs', GPIO.readInputs())
     } else {
         console.log('no socket')
     }
-    DB.save(GPIO.getTemperature())
+    DB.save(temp)
 }, 1000)
 
 hbs.registerPartials(`${__dirname}/views/components`)
-hbs.registerHelper('stringifyFunc', function (fn) {
+hbs.registerHelper('stringifyFunc', fn => {
     return new hbs.SafeString(`(${fn.toString().replace(/\"/g, "'")})()`)
 })
 

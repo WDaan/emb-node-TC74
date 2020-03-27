@@ -26,7 +26,7 @@ module.exports = function (io) {
         res.render('index')
     })
 
-    /* GET temperature data*/
+    /* GET temperature data */
     router.get('/temperatures', async (req, res, next) => {
         const { num } = req.query
         const result = await DB.getTemperatures(num)
