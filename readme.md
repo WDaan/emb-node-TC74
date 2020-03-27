@@ -37,17 +37,7 @@
 
 ```
 
-  
-
-### 'production'
-
-```
-
-docker build -t name/image-name .
-
-```
-
-  
+    
 
 # Interface
 
